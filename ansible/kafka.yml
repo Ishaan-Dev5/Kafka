@@ -1,0 +1,5 @@
+- name: Kafka Installation Playbook
+  hosts: all
+  become: yes
+  roles:
+    - kafka_role
