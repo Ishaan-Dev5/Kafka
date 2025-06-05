@@ -1,0 +1,71 @@
+---
+
+- name: Ensure python3 and six are installed
+  become: yes
+  apt:
+    name:
+      - python3
+      - python3-six
+    state: present
+    update_cache: yes
+
+- name: Download java
+  apt:
+    name: openjdk-11-jdk
+    state: present
+  become: yes
+
+- name: Download Kafka
+  get_url:
+      url: "{{ kafka_download_url }}"
+      dest: /home/ubuntu/{{ kafka_archive }}
+      mode: '0644'
+  become: yes
+
+- name: extract kafka
+  unarchive:
+       src: /home/ubuntu/{{ kafka_archive }}
+       dest: /home/ubuntu/
+       remote_src: yes
+  become: yes
+
+- name: set ownership to user
+  file:
+    path: /home/ubuntu/{{ kafka_dir }}
+    owner: ubuntu
+    group: ubuntu
+  become: yes
+
+- name: remove old kafka dir
+  file: 
+    path: /home/ubuntu/kafka
+    state: absent
+
+
+
+
+- name: rename the kafka directory
+  shell: mv -f /home/ubuntu/{{ kafka_dir }} /home/ubuntu/kafka
+  become: yes
+   
+- name: generate uuid
+  shell: "/home/ubuntu/kafka/bin/kafka-storage.sh random-uuid"
+  register: kafka_uuid
+
+- name: Remove old kafka storage logs
+  file:
+    path: /tmp/kraft-combined-logs
+    state: absent
+
+
+
+- name: format kraft log directory 
+  shell: "/home/ubuntu/kafka/bin/kafka-storage.sh format -t {{ kafka_uuid.stdout }} -c /home/ubuntu/kafka/config/kraft/server.properties"
+  args: 
+   creates: /tmp/kafka-formatted 
+
+- name: start kafka
+  shell: "nohup /home/ubuntu/kafka/bin/kafka-server-start.sh /home/ubuntu/kafka/config/kraft/server.properties"
+  async: 10
+  poll: 0
+  become: yes
