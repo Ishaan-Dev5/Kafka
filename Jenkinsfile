@@ -56,6 +56,7 @@ pipeline {
 
               ansible-inventory -i aws_ec2.yaml --graph
               ansible-playbook -i aws_ec2.yaml kafka.yml
+              ansible-galaxy collection install amazon.aws
             '''
           }
         }
