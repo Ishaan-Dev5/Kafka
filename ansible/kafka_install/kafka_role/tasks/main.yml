@@ -45,24 +45,36 @@
 - name: rename the kafka directory
   shell: mv -f /home/ubuntu/{{ kafka_dir }} /home/ubuntu/kafka
   become: yes
-   
-- name: generate uuid
+  
+- name: Generate UUID
   shell: "/home/ubuntu/kafka/bin/kafka-storage.sh random-uuid"
   register: kafka_uuid
+  become: yes
+  become_user: ubuntu
 
 - name: Remove old kafka storage logs
   file:
     path: /tmp/kraft-combined-logs
     state: absent
 
-
-
-- name: format kraft log directory 
-  shell: "/home/ubuntu/kafka/bin/kafka-storage.sh format -t {{ kafka_uuid.stdout }} -c /home/ubuntu/kafka/config/kraft/server.properties && touch /tmp/kafka-formatted"
-  args: 
+- name: Format Kraft logs directory
+  shell: "/home/ubuntu/kafka/bin/kafka-storage.sh format -t {{ kafka_uuid.stdout }} -c /home/ubuntu/kafka/config/kraft/server.properties"
+  args:
     creates: /tmp/kafka-formatted
   become: yes
+  become_user: ubuntu
 
+
+
+
+
+
+- name: Create format marker file
+  file:
+    path: /tmp/kafka-formatted
+    state: touch
+  become: yes
+  
 - name: Set ownership for /tmp/kraft-combined-logs
   file:
     path: /tmp/kraft-combined-logs
