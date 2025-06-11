@@ -3,6 +3,7 @@ pipeline {
 
   environment {
     AWS_REGION = 'ap-south-1'
+    SSH_USER = 'ubuntu'
   }
 
   parameters {
