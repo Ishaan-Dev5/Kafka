@@ -197,7 +197,7 @@ resource "aws_security_group" "private_sg" {
 
 
 resource "aws_instance" "instance" {
-  ami                    = "ami-02e94b011299ef128" # Replace with actual AMI ID for your region
+  ami                    = "ami-021a584b49225376d" # Replace with actual AMI ID for your region
   instance_type          = "t3.medium"
   subnet_id              = aws_subnet.public_subnet_1.id     # Your subnet ID
   key_name               = "slave"                           # Optional: your EC2 key pair
@@ -210,7 +210,7 @@ resource "aws_instance" "instance" {
 }
 
 resource "aws_instance" "private_instance_1" {
-  ami                    = "ami-02e94b011299ef128" # Replace with your AMI
+  ami                    = "ami-021a584b49225376d" # Replace with your AMI
   instance_type          = "t3.medium"
   subnet_id              = aws_subnet.private_subnet_1.id
   key_name               = "slave"
@@ -222,7 +222,7 @@ resource "aws_instance" "private_instance_1" {
 }
 
 resource "aws_instance" "private_instance_2" {
-  ami                    = "ami-02e94b011299ef128" # Replace with your AMI
+  ami                    = "ami-021a584b49225376d" # Replace with your AMI
   instance_type          = "t3.medium"
   subnet_id              = aws_subnet.private_subnet_2.id
   key_name               = "slave"
