@@ -34,13 +34,13 @@ pipeline {
     }
 
     stage('Inject Bastion IP into Ansible Config') {
-      steps {
-        script {
-          def bastionIp = sh(script: "terraform -chdir=terraform output -raw bastionhost.public_ip", returnStdout: true).trim()
-          sh "sed -i 's|<bastionhost.public_ip>|${bastionIp}|' ansible/kafka_install/ansible.cfg"
-        }
-      }
+  steps {
+    script {
+      def bastionIp = sh(script: "terraform -chdir=terraform output -raw bastionhost_public_ip", returnStdout: true).trim()
+      sh "sed -i 's|<bastionhost.public_ip>|${bastionIp}|' ansible/kafka_install/ansible.cfg"
     }
+  }
+}
 
     stage('Install KAFKA with Ansible') {
       steps {
