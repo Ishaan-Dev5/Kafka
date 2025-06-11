@@ -38,10 +38,6 @@ output "private_instance_2_private_ip" {
   value       = aws_instance.private_instance_2.private_ip
 }
 
-output "kafka_nlb_dns_name" {
-  description = "DNS name of the Kafka Network Load Balancer"
-  value       = aws_lb.kafka_nlb.dns_name
-}
 
 output "kafka_nlb_target_group_arn" {
   description = "Kafka Target Group ARN"
