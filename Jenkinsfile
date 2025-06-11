@@ -26,7 +26,10 @@ pipeline {
             sh '''
               export AWS_REGION=${AWS_REGION}
               terraform init
-              terraform apply -auto-approve
+              terraform fmt
+              
+              
+             terraform apply -auto-approve
             '''
           }
         }
