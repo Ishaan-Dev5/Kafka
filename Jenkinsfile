@@ -11,13 +11,9 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') {
-      steps {
-        git url: 'https://github.com/Ishaan-Dev5/Kafka.git', branch: 'main'
-      }
-    }
+    
 
-    stage('Terraform Init & Apply') {
+    stage('Terraform') {
       when {
         expression { return !params.DESTROY_INFRA }
       }
@@ -38,7 +34,7 @@ pipeline {
       }
     }
 
-    stage('Inject Bastion IP into Ansible Config') {
+    stage(' Bastion IP into Ansible Config') {
       when {
         expression { return !params.DESTROY_INFRA }
       }
@@ -92,7 +88,7 @@ pipeline {
       }
     }
 
-    stage('Terraform Destroy (Optional)') {
+    stage('Terraform Destroy ') {
       when {
         expression { return params.DESTROY_INFRA == true }
       }
