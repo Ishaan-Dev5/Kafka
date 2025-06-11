@@ -1,6 +1,0 @@
-[Servers]
-ubuntu@13.127.223.46
-
-[Servers:vars]
-ansible_port=22
-ansible_ssh_private_key_file=/home/ishaan/UNIX/slave.pem
