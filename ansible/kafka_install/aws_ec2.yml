@@ -1,0 +1,15 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - ap-south-1     # Replace with your actual AWS region
+keyed_groups:
+  - key: tags.Name
+    prefix: ""
+filters:
+  instance-state-name: running
+  tag:Name:
+    - bastionhost
+    - KafkaPrivate1
+    - KafkaPrivate2
+hostnames:
+  - private-ip-address
+  - public-ip-address
