@@ -63,7 +63,7 @@ pipeline {
             script {
               def bastionIp = sh(script: "terraform -chdir=../terraform output -raw bastionhost_public_ip", returnStdout: true).trim()
 
-              sh '''
+              sh """
                   echo "Copying slave.pem to Bastion (${bastionIp})"
                   scp -o StrictHostKeyChecking=no -i "$SSH_KEY" "$SSH_KEY" ${SSH_USER}@${bastionIp}:/tmp/slave.pem
 
@@ -72,7 +72,7 @@ pipeline {
                   sudo chown ${SSH_USER}:${SSH_USER} /home/${SSH_USER}/slave.pem &&
                 sudo chmod 400 /home/${SSH_USER}/slave.pem
                '
-              '''
+              """
 
               sh '''
                 export AWS_REGION=${AWS_REGION}
