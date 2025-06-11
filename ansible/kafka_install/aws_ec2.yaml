@@ -3,7 +3,7 @@ regions:
   - ap-south-1
 filters:
   tag:Name:
-    - bastionhost
+    
     - KafkaPrivate1
     - KafkaPrivate2
   instance-state-name: running
