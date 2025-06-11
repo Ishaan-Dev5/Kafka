@@ -42,17 +42,20 @@ pipeline {
   }
 }
 
-    stage('Install KAFKA with Ansible') {
+       stage('Install KAFKA with Ansible') {
       steps {
         dir('ansible/kafka_install') {
-          withCredentials([[
-            $class: 'AmazonWebServicesCredentialsBinding',
-            credentialsId: 'aws_cred'
-          ]]) {
+          withCredentials([
+            [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_cred'],
+            sshUserPrivateKey(credentialsId: 'kafka_key', keyFileVariable: 'SSH_KEY')
+          ]) {
             sh '''
               export AWS_REGION=${AWS_REGION}
               pip3 install --upgrade pip
               pip3 install -r requirements.txt
+
+              sed -i "s|~/.ssh/slave.pem|$SSH_KEY|g" ansible.cfg
+              sed -i "s|~/.ssh/slave.pem|$SSH_KEY|g" aws_ec2.yaml
 
               ansible-inventory -i aws_ec2.yaml --graph
               ansible-playbook -i aws_ec2.yaml kafka.yml
@@ -62,6 +65,7 @@ pipeline {
         }
       }
     }
+
 
     stage('Terraform Destroy (Optional)') {
       when {
