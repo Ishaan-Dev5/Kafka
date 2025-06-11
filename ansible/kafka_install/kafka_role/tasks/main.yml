@@ -63,7 +63,14 @@
     creates: /tmp/kafka-formatted
   become: yes
 
-
+- name: Set ownership for /tmp/kraft-combined-logs
+  file:
+    path: /tmp/kraft-combined-logs
+    owner: ubuntu
+    group: ubuntu
+    recurse: yes
+  become: yes
+  
 - name: Create systemd unit file for Kafka
   copy:
     dest: /etc/systemd/system/kafka.service
