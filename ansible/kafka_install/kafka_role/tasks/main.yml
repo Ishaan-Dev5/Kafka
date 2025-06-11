@@ -58,9 +58,11 @@
 
 
 - name: format kraft log directory 
-  shell: "/home/ubuntu/kafka/bin/kafka-storage.sh format -t {{ kafka_uuid.stdout }} -c /home/ubuntu/kafka/config/kraft/server.properties"
+  shell: "/home/ubuntu/kafka/bin/kafka-storage.sh format -t {{ kafka_uuid.stdout }} -c /home/ubuntu/kafka/config/kraft/server.properties && touch /tmp/kafka-formatted"
   args: 
-   creates: /tmp/kafka-formatted 
+    creates: /tmp/kafka-formatted
+  become: yes
+
 
 - name: Create systemd unit file for Kafka
   copy:
