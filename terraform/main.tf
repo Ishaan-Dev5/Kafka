@@ -7,7 +7,7 @@ resource "aws_vpc" "main" {
   instance_tenancy = "default"
 
   tags = {
-    Name = "Terraform1"
+    Name = "KAFKA"
   }
 }
 
