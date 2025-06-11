@@ -52,7 +52,7 @@ pipeline {
             sh '''
               export AWS_REGION=${AWS_REGION}
               pip3 install --upgrade pip
-              
+              pip3 install -r requirements.txt
 
               ansible-inventory -i aws_ec2.yaml --graph
               ansible-playbook -i aws_ec2.yaml kafka.yml
