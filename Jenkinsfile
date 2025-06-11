@@ -40,14 +40,14 @@ pipeline {
   steps {
     script {
       def bastionIp = sh(script: "terraform -chdir=terraform output -raw bastionhost_public_ip", returnStdout: true).trim()
-      sh "sed -i 's|<bastionhost.public_ip>|${bastionIp}|' ansible/kafka_install/ansible.cfg"
+      sh "sed -i 's|<bastionhost.public_ip>|${bastionIp}|' ansible/ansible.cfg"
     }
   }
 }
 
        stage('Install KAFKA with Ansible') {
       steps {
-        dir('ansible/kafka_install') {
+        dir('ansible') {
           withCredentials([
             [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_cred'],
             sshUserPrivateKey(credentialsId: 'kafka_key', keyFileVariable: 'SSH_KEY')
