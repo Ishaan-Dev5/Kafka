@@ -12,4 +12,4 @@ filters:
     - KafkaPrivate2
 hostnames:
   - private-ip-address
-  - public-ip-address
+ 
