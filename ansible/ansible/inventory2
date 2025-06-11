@@ -1,7 +1,0 @@
-[servers]
-10.0.15.112
-
-[servers:vars]
-ansible_user=ubuntu
-ansible_ssh_private_key_file=slave.pem
-ansible_ssh_common_args='-o ProxyJump=ubuntu@65.1.100.65 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
