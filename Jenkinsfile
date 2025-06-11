@@ -56,11 +56,11 @@ pipeline {
              script {
           def bastionIp = sh(script: "terraform -chdir=../terraform output -raw bastionhost_public_ip", returnStdout: true).trim()
 
-          sh """
+          sh '''
             echo "Copying slave.pem to Bastion (${bastionIp})"
             scp -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_KEY ${SSH_USER}@${bastionIp}:/home/${SSH_USER}/slave.pem
             ssh -o StrictHostKeyChecking=no -i $SSH_KEY ${SSH_USER}@${bastionIp} "chmod 400 /home/${SSH_USER}/slave.pem"
-          """
+          '''
             sh '''
               export AWS_REGION=${AWS_REGION}
               pip3 install --upgrade pip
