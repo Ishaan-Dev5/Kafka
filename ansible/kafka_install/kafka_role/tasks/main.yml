@@ -62,8 +62,36 @@
   args: 
    creates: /tmp/kafka-formatted 
 
-- name: start kafka
-  shell: "nohup /home/ubuntu/kafka/bin/kafka-server-start.sh /home/ubuntu/kafka/config/kraft/server.properties"
-  async: 10
-  poll: 0
+- name: Create systemd unit file for Kafka
+  copy:
+    dest: /etc/systemd/system/kafka.service
+    content: |
+      [Unit]
+      Description=Apache Kafka Server
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=ubuntu
+      ExecStart=/home/ubuntu/kafka/bin/kafka-server-start.sh /home/ubuntu/kafka/config/kraft/server.properties
+      Restart=on-abnormal
+
+      [Install]
+      WantedBy=multi-user.target
+  become: yes
+
+- name: Reload systemd daemon
+  shell: systemctl daemon-reexec
+  become: yes
+
+- name: Enable Kafka service
+  systemd:
+    name: kafka
+    enabled: yes
+  become: yes
+
+- name: Start Kafka service
+  systemd:
+    name: kafka
+    state: started
   become: yes
