@@ -190,6 +190,23 @@ pipeline {
            subject: 'FAILURE: Kafka Deployment Pipeline',
            body: "Build #${env.BUILD_NUMBER} failed.\n\nCheck Jenkins for details:\n${env.BUILD_URL}"
     }
-  
+
+    always {
+      script {
+        def userInput = input(
+          id: 'WorkspaceCleanup', message: 'Do you want to clean the workspace?', parameters: [
+            choice(name: 'CLEAN_WORKSPACE', choices: ['Yes', 'No'], description: 'Clean the Jenkins workspace after build?')
+          ]
+        )
+
+        if (userInput == 'Yes') {
+          echo 'Cleaning workspace...'
+          cleanWs()
+        } else {
+          echo 'Skipping workspace cleanup.'
+        }
+      }
+    }
+  }
   }
 }
