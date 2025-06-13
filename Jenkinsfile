@@ -172,7 +172,7 @@ pipeline {
   post {
     success {
       slackSend (
-        channel: '#all-myspace',
+        channel: '#jenkins',
         color: 'good',
         message: "Kafka Deployment Pipeline completed successfully. <${env.BUILD_URL}|View Job>"
       )
@@ -182,7 +182,7 @@ pipeline {
     }
     failure {
       slackSend (
-        channel: '#all-myspace',
+        channel: '#jenkins',
         color: 'danger',
         message: "Kafka Deployment Pipeline failed. <${env.BUILD_URL}|View Job>"
       )
