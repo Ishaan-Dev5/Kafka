@@ -172,7 +172,7 @@ pipeline {
   post {
     success {
       slackSend (
-        channel: '#all-arizona',
+        channel: '#all-myspace',
         color: 'good',
         message: "Kafka Deployment Pipeline completed successfully. <${env.BUILD_URL}|View Job>"
       )
@@ -182,7 +182,7 @@ pipeline {
     }
     failure {
       slackSend (
-        channel: '#all-arizona',
+        channel: '#all-myspace',
         color: 'danger',
         message: "Kafka Deployment Pipeline failed. <${env.BUILD_URL}|View Job>"
       )
@@ -190,8 +190,6 @@ pipeline {
            subject: 'FAILURE: Kafka Deployment Pipeline',
            body: "Build #${env.BUILD_NUMBER} failed.\n\nCheck Jenkins for details:\n${env.BUILD_URL}"
     }
-    always {
-      archiveArtifacts artifacts: 'terraform/*.tfstate, terraform/*.log, terraform/tfplan, ansible/inventory-graph.txt', onlyIfSuccessful: true
-    }
+  
   }
 }
