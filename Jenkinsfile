@@ -60,15 +60,6 @@ pipeline {
       }
     }
 
-    stage('Approve Terraform Apply') {
-      when {
-        expression { return !params.DESTROY_INFRA }
-      }
-      steps {
-        input message: 'Do you want to proceed with Terraform Apply?'
-      }
-    }
-
     stage('Terraform Apply') {
       when {
         expression { return !params.DESTROY_INFRA }
@@ -140,15 +131,6 @@ pipeline {
       }
     }
 
-    stage('Approve Terraform Destroy') {
-      when {
-        expression { return params.DESTROY_INFRA }
-      }
-      steps {
-        input message: 'Are you sure you want to destroy the infrastructure?'
-      }
-    }
-
     stage('Terraform Destroy') {
       when {
         expression { return params.DESTROY_INFRA }
@@ -190,6 +172,5 @@ pipeline {
            subject: 'FAILURE: Kafka Deployment Pipeline',
            body: "Build #${env.BUILD_NUMBER} failed.\n\nCheck Jenkins for details:\n${env.BUILD_URL}"
     }
-  
   }
 }
