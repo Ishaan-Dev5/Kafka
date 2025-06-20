@@ -127,6 +127,127 @@ resource "aws_route_table_association" "d" {
   route_table_id = aws_route_table.private_RT.id
 }
 
+# Public NACL
+resource "aws_network_acl" "public_nacl" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "public-nacl"
+  }
+}
+
+resource "aws_network_acl_rule" "public_inbound_http" {
+  network_acl_id = aws_network_acl.public_nacl.id
+  rule_number    = 100
+  egress         = false
+  protocol       = "6" # TCP
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 80
+  to_port        = 80
+}
+
+resource "aws_network_acl_rule" "public_inbound_ssh" {
+  network_acl_id = aws_network_acl.public_nacl.id
+  rule_number    = 110
+  egress         = false
+  protocol       = "6" # TCP
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 22
+  to_port        = 22
+}
+
+resource "aws_network_acl_rule" "public_inbound_ephemeral" {
+  network_acl_id = aws_network_acl.public_nacl.id
+  rule_number    = 120
+  egress         = false
+  protocol       = "6"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "public_outbound_all" {
+  network_acl_id = aws_network_acl.public_nacl.id
+  rule_number    = 100
+  egress         = true
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+}
+
+# Associate public NACL
+resource "aws_network_acl_association" "assoc_public_1" {
+  subnet_id      = aws_subnet.public_subnet_1.id
+  network_acl_id = aws_network_acl.public_nacl.id
+}
+
+resource "aws_network_acl_association" "assoc_public_2" {
+  subnet_id      = aws_subnet.public_subnet_2.id
+  network_acl_id = aws_network_acl.public_nacl.id
+}
+
+# Private NACL
+resource "aws_network_acl" "private_nacl" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "private-nacl"
+  }
+}
+
+resource "aws_network_acl_rule" "private_inbound_kafka" {
+  network_acl_id = aws_network_acl.private_nacl.id
+  rule_number    = 100
+  egress         = false
+  protocol       = "6"
+  rule_action    = "allow"
+  cidr_block     = "10.0.0.0/16" # Allow from public subnet range
+  from_port      = 9092
+  to_port        = 9093
+}
+
+resource "aws_network_acl_rule" "private_inbound_ssh" {
+  network_acl_id = aws_network_acl.private_nacl.id
+  rule_number    = 110
+  egress         = false
+  protocol       = "6"
+  rule_action    = "allow"
+  cidr_block     = "10.0.0.0/16"
+  from_port      = 22
+  to_port        = 22
+}
+
+resource "aws_network_acl_rule" "private_inbound_ephemeral" {
+  network_acl_id = aws_network_acl.private_nacl.id
+  rule_number    = 120
+  egress         = false
+  protocol       = "6"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "private_outbound_all" {
+  network_acl_id = aws_network_acl.private_nacl.id
+  rule_number    = 100
+  egress         = true
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+}
+
+# Associate private NACL
+resource "aws_network_acl_association" "assoc_private_1" {
+  subnet_id      = aws_subnet.private_subnet_1.id
+  network_acl_id = aws_network_acl.private_nacl.id
+}
+
+resource "aws_network_acl_association" "assoc_private_2" {
+  subnet_id      = aws_subnet.private_subnet_2.id
+  network_acl_id = aws_network_acl.private_nacl.id
+}
 
 
 resource "aws_security_group" "public_sg" {
