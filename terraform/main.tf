@@ -57,7 +57,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "terraform_igw"
+    Name = "kafka_igw"
   }
 }
 
@@ -71,7 +71,7 @@ resource "aws_nat_gateway" "NAT" {
   subnet_id     = aws_subnet.public_subnet_1.id
 
   tags = {
-    Name = "terraform1_NAT"
+    Name = "kafka_NAT"
   }
 
   depends_on = [aws_internet_gateway.gw]
